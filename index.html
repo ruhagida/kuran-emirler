@@ -22,11 +22,13 @@
   --muted:     #7a8fa8;
   --border:    rgba(201,150,58,.25);
   --border-glow: rgba(201,150,58,.55);
+  --efeful:    #7b4fc9;
+  --efeful-lt: #a87de8;
+  --efeful-dim:rgba(123,79,201,.3);
   --radius:    12px;
   --transition: .35s cubic-bezier(.4,0,.2,1);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -37,9 +39,14 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+  transition: background .5s;
 }
 
-/* ── Geometric background ── */
+/* Tefeül mode body tint */
+body.efeful-mode {
+  background: #0a0818;
+}
+
 body::before {
   content: '';
   position: fixed;
@@ -50,94 +57,80 @@ body::before {
   background-size: auto, 120px 120px;
   pointer-events: none;
   z-index: 0;
+  transition: opacity .5s;
 }
 
-/* ── Layout ── */
+/* Tefeül bg overlay */
+body.efeful-mode::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(123,79,201,.1) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 #app { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 1rem 4rem; }
 
 /* ── Header ── */
-header {
-  text-align: center;
-  padding: 2.5rem 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.ornament {
-  font-size: 2rem;
-  color: var(--gold);
-  letter-spacing: .3em;
-  display: block;
-  margin-bottom: .4rem;
-  animation: fadeIn .8s ease;
-}
-h1 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(1rem, 3.5vw, 1.65rem);
-  font-weight: 700;
-  color: var(--gold-lt);
-  line-height: 1.3;
-  text-shadow: 0 0 40px rgba(201,150,58,.3);
-  animation: fadeIn 1s ease .15s both;
-}
-.subtitle {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: var(--cream-dim);
-  font-size: 1rem;
-  margin-top: .5rem;
-  animation: fadeIn 1s ease .3s both;
-}
+header { text-align: center; padding: 2.5rem 1rem 1.5rem; border-bottom: 1px solid var(--border); }
+.ornament { font-size: 2rem; color: var(--gold); letter-spacing: .3em; display: block; margin-bottom: .4rem; animation: fadeIn .8s ease; }
+h1 { font-family: 'Cinzel Decorative', serif; font-size: clamp(1rem, 3.5vw, 1.65rem); font-weight: 700; color: var(--gold-lt); line-height: 1.3; text-shadow: 0 0 40px rgba(201,150,58,.3); animation: fadeIn 1s ease .15s both; }
+.subtitle { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--cream-dim); font-size: 1rem; margin-top: .5rem; animation: fadeIn 1s ease .3s both; }
 
 /* ── Controls ── */
-.controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1.25rem 0;
-  flex-wrap: wrap;
-}
-.mode-toggle {
-  display: flex;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  overflow: hidden;
-}
-.mode-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  padding: .5rem 1.25rem;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-}
-.mode-btn.active {
-  background: var(--gold);
-  color: var(--bg);
-  font-weight: 600;
-}
+.controls { display: flex; align-items: center; justify-content: center; gap: .75rem; padding: 1.25rem 0; flex-wrap: wrap; }
+
+.mode-toggle { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; overflow: hidden; }
+.mode-btn { background: none; border: none; color: var(--muted); font-family: 'Cormorant Garamond', serif; font-size: 1rem; padding: .5rem 1.25rem; cursor: pointer; transition: var(--transition); white-space: nowrap; }
+.mode-btn.active { background: var(--gold); color: var(--bg); font-weight: 600; }
 .mode-btn:hover:not(.active) { color: var(--gold-lt); }
 
-.counter {
-  font-family: 'Cormorant Garamond', serif;
-  color: var(--muted);
-  font-size: .95rem;
+/* Tefeül toggle button */
+.btn-efeful {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; color: var(--muted);
+  font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+  padding: .5rem 1.2rem; cursor: pointer; transition: all .3s;
+  white-space: nowrap;
 }
+.btn-efeful:hover { color: var(--efeful-lt); border-color: rgba(123,79,201,.5); }
+.btn-efeful.active {
+  background: linear-gradient(135deg, #4a2a9a, var(--efeful));
+  border-color: var(--efeful);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(123,79,201,.4);
+  animation: efeful-pulse 2.5s ease-in-out infinite;
+}
+@keyframes efeful-pulse {
+  0%,100% { box-shadow: 0 0 18px rgba(123,79,201,.4); }
+  50%      { box-shadow: 0 0 28px rgba(123,79,201,.7); }
+}
+
+.btn-efeful .shuffle-icon { transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.btn-efeful.active .shuffle-icon { animation: spin-once .5s ease; }
+@keyframes spin-once { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Tefeül badge */
+.efeful-badge {
+  display: none; align-items: center; gap: .4rem;
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: .85rem; color: var(--efeful-lt);
+  background: var(--efeful-dim); border: 1px solid rgba(123,79,201,.4);
+  border-radius: 100px; padding: .2rem .8rem;
+}
+.efeful-badge.visible { display: inline-flex; }
+.efeful-badge .dot { width:6px; height:6px; border-radius:50%; background: var(--efeful-lt); animation: blink 1.5s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.counter { font-family: 'Cormorant Garamond', serif; color: var(--muted); font-size: .95rem; }
 .counter strong { color: var(--gold-lt); }
+.efeful-mode .counter strong { color: var(--efeful-lt); }
 
 /* ── SINGLE VIEW ── */
 #single-view { animation: fadeIn .4s ease; }
-
-.card-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  padding: .75rem 0;
-}
+.card-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; padding: .75rem 0; }
 
 .card {
   width: 100%;
@@ -147,338 +140,162 @@ h1 {
   padding: 2.5rem 2.25rem 2rem;
   position: relative;
   box-shadow: 0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(201,150,58,.12);
-  transition: border-color .3s;
+  transition: border-color .4s, box-shadow .4s;
 }
 .card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius);
+  content: ''; position: absolute; inset: 0; border-radius: var(--radius);
   background: linear-gradient(135deg, rgba(201,150,58,.06) 0%, transparent 60%);
-  pointer-events: none;
+  pointer-events: none; transition: background .4s;
 }
+.card::after { content: '✦'; position: absolute; top: .75rem; right: 1rem; color: var(--gold-dim); font-size: .8rem; opacity: .7; transition: color .4s; }
+.card .corner-tl { position: absolute; top: .75rem; left: 1rem; color: var(--gold-dim); font-size: .8rem; opacity: .7; transition: color .4s; }
 
-/* corner ornaments */
-.card::after {
-  content: '✦';
-  position: absolute;
-  top: .75rem; right: 1rem;
-  color: var(--gold-dim);
-  font-size: .8rem;
-  opacity: .7;
+/* Tefeül card variant */
+.efeful-mode .card {
+  border-color: rgba(123,79,201,.35);
+  box-shadow: 0 8px 40px rgba(0,0,0,.5), 0 0 30px rgba(123,79,201,.08), inset 0 1px 0 rgba(123,79,201,.15);
 }
-.card .corner-tl {
-  position: absolute;
-  top: .75rem; left: 1rem;
-  color: var(--gold-dim);
-  font-size: .8rem;
-  opacity: .7;
-}
+.efeful-mode .card::before { background: linear-gradient(135deg, rgba(123,79,201,.07) 0%, transparent 60%); }
+.efeful-mode .card::after, .efeful-mode .card .corner-tl { color: rgba(123,79,201,.5); }
 
-.entry-meta {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
+.entry-meta { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
 .entry-num {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: .85rem;
-  color: var(--gold);
-  background: rgba(201,150,58,.12);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: .2rem .75rem;
-  white-space: nowrap;
+  font-family: 'Cinzel Decorative', serif; font-size: .85rem;
+  color: var(--gold); background: rgba(201,150,58,.12);
+  border: 1px solid var(--border); border-radius: 100px; padding: .2rem .75rem;
+  white-space: nowrap; transition: all .4s;
 }
-.entry-sure {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: var(--cream-dim);
-  font-size: .95rem;
-}
+.efeful-mode .entry-num { color: var(--efeful-lt); background: var(--efeful-dim); border-color: rgba(123,79,201,.35); }
+
+.entry-sure { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--cream-dim); font-size: .95rem; }
 
 .entry-emir {
   font-family: 'Cinzel Decorative', serif;
   font-size: clamp(1.1rem, 3vw, 1.55rem);
-  color: var(--cream);
-  line-height: 1.4;
-  margin-bottom: 1.75rem;
+  color: var(--cream); line-height: 1.4; margin-bottom: 1.75rem;
   text-shadow: 0 0 20px rgba(240,226,196,.08);
 }
 
 .divider {
-  width: 80px;
-  height: 1px;
+  width: 80px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1.5rem; transition: background .4s;
 }
+.efeful-mode .divider { background: linear-gradient(90deg, transparent, var(--efeful-lt), transparent); }
 
-.entry-meal {
-  font-family: 'Amiri', serif;
-  font-size: 1.1rem;
-  line-height: 1.9;
-  color: var(--text);
-  font-style: italic;
-  border-left: 2px solid var(--gold-dim);
-  padding-left: 1.25rem;
-  margin-bottom: 1.75rem;
-}
+.entry-meal { font-family: 'Amiri', serif; font-size: 1.1rem; line-height: 1.9; color: var(--text); font-style: italic; border-left: 2px solid var(--gold-dim); padding-left: 1.25rem; margin-bottom: 1.75rem; transition: border-color .4s; }
+.efeful-mode .entry-meal { border-left-color: rgba(123,79,201,.5); }
 
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .75rem;
-  flex-wrap: wrap;
-  border-top: 1px solid var(--border);
-  padding-top: 1rem;
-}
-.source-link {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  color: var(--gold);
-  text-decoration: none;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: .95rem;
-  transition: color .2s;
-}
+.card-footer { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 1rem; transition: border-color .4s; }
+.efeful-mode .card-footer { border-top-color: rgba(123,79,201,.25); }
+
+.source-link { display: inline-flex; align-items: center; gap: .4rem; color: var(--gold); text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: .95rem; transition: color .2s; }
 .source-link:hover { color: var(--gold-lt); text-decoration: underline; }
 .source-link svg { opacity: .7; flex-shrink: 0; }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-}
+.actions { display: flex; align-items: center; gap: .6rem; }
 .btn-share {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  color: var(--text);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: .9rem;
-  padding: .35rem .9rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all .2s;
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 100px; color: var(--text);
+  font-family: 'Cormorant Garamond', serif; font-size: .9rem;
+  padding: .35rem .9rem; cursor: pointer; text-decoration: none; transition: all .2s;
 }
-.btn-share:hover {
-  background: #000;
-  border-color: #555;
-  color: #fff;
+.btn-share:hover { background: #000; border-color: #555; color: #fff; }
+
+/* Skip / random button inside card */
+.btn-skip {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: none; border: 1px solid rgba(123,79,201,.4);
+  border-radius: 100px; color: var(--efeful-lt);
+  font-family: 'Cormorant Garamond', serif; font-size: .9rem;
+  padding: .35rem .9rem; cursor: pointer; transition: all .2s;
+  opacity: 0; pointer-events: none; transition: opacity .3s, background .2s;
 }
-.btn-share svg { flex-shrink: 0; }
+.efeful-mode .btn-skip { opacity: 1; pointer-events: auto; }
+.btn-skip:hover { background: var(--efeful-dim); }
 
 /* ── Navigation ── */
-.nav-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-  max-width: 680px;
-  margin: 0 auto;
-}
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; max-width: 680px; margin: 0 auto; }
 .nav-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  color: var(--text);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  padding: .6rem 1.25rem;
-  cursor: pointer;
-  transition: all .2s;
-  text-decoration: none;
-  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; color: var(--text);
+  font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+  padding: .6rem 1.25rem; cursor: pointer; transition: all .2s;
+  text-decoration: none; white-space: nowrap;
 }
-.nav-btn:hover:not(:disabled) {
-  border-color: var(--gold);
-  color: var(--gold-lt);
-  background: rgba(201,150,58,.08);
-}
+.nav-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-lt); background: rgba(201,150,58,.08); }
 .nav-btn:disabled { opacity: .3; cursor: default; }
+.efeful-mode .nav-btn:hover:not(:disabled) { border-color: var(--efeful); color: var(--efeful-lt); background: var(--efeful-dim); }
 
-.progress-bar-wrap {
-  flex: 1;
-  height: 3px;
-  background: var(--surface);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--gold-dim), var(--gold));
-  border-radius: 10px;
-  transition: width .4s cubic-bezier(.4,0,.2,1);
-}
+.progress-bar-wrap { flex: 1; height: 3px; background: var(--surface); border-radius: 10px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 10px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+.efeful-mode .progress-bar { background: linear-gradient(90deg, #4a2a9a, var(--efeful-lt)); }
 
 /* ── ALL VIEW ── */
 #all-view { animation: fadeIn .4s ease; }
-
-.search-wrap {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(8,15,29,.92);
-  backdrop-filter: blur(12px);
-  padding: .75rem 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 1.5rem;
-}
-.search-input {
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  color: var(--text);
-  font-family: 'Amiri', serif;
-  font-size: 1rem;
-  padding: .6rem 1.25rem;
-  outline: none;
-  transition: border-color .2s;
-}
+.search-wrap { position: sticky; top: 0; z-index: 10; background: rgba(8,15,29,.92); backdrop-filter: blur(12px); padding: .75rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.search-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 100px; color: var(--text); font-family: 'Amiri', serif; font-size: 1rem; padding: .6rem 1.25rem; outline: none; transition: border-color .2s; }
 .search-input:focus { border-color: var(--gold); }
 .search-input::placeholder { color: var(--muted); }
 
-.all-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: .75rem;
-}
-
+.all-grid { display: grid; grid-template-columns: 1fr; gap: .75rem; }
 .all-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  cursor: pointer;
-  transition: all .2s;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: start;
-  gap: .75rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1rem 1.25rem; cursor: pointer; transition: all .2s;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: .75rem;
 }
-.all-card:hover {
-  border-color: var(--border-glow);
-  background: var(--surface2);
-  transform: translateX(3px);
-}
+.all-card:hover { border-color: var(--border-glow); background: var(--surface2); transform: translateX(3px); }
 .all-card.expanded { border-color: var(--gold-dim); }
-
-.all-num {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: .75rem;
-  color: var(--gold);
-  background: rgba(201,150,58,.12);
-  border-radius: 100px;
-  padding: .15rem .6rem;
-  white-space: nowrap;
-  margin-top: .1rem;
-}
+.all-num { font-family: 'Cinzel Decorative', serif; font-size: .75rem; color: var(--gold); background: rgba(201,150,58,.12); border-radius: 100px; padding: .15rem .6rem; white-space: nowrap; margin-top: .1rem; }
 .all-content { min-width: 0; }
-.all-emir {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--cream);
-  line-height: 1.4;
-}
-.all-sure {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  color: var(--cream-dim);
-  font-size: .85rem;
-  margin-top: .2rem;
-}
-.all-expand-icon {
-  color: var(--muted);
-  font-size: .9rem;
-  margin-top: .2rem;
-  transition: transform .2s;
-  flex-shrink: 0;
-}
+.all-emir { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: var(--cream); line-height: 1.4; }
+.all-sure { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--cream-dim); font-size: .85rem; margin-top: .2rem; }
+.all-expand-icon { color: var(--muted); font-size: .9rem; margin-top: .2rem; transition: transform .2s; flex-shrink: 0; }
 .all-card.expanded .all-expand-icon { transform: rotate(180deg); }
-
-.all-meal-wrap {
-  display: none;
-  grid-column: 1 / -1;
-  padding-top: .75rem;
-  border-top: 1px solid var(--border);
-  margin-top: .75rem;
-}
+.all-meal-wrap { display: none; grid-column: 1 / -1; padding-top: .75rem; border-top: 1px solid var(--border); margin-top: .75rem; }
 .all-card.expanded .all-meal-wrap { display: block; }
-
-.all-meal {
-  font-family: 'Amiri', serif;
-  font-style: italic;
-  font-size: 1rem;
-  line-height: 1.85;
-  color: var(--text);
-  border-left: 2px solid var(--gold-dim);
-  padding-left: 1rem;
-  margin-bottom: .75rem;
-}
-
-.all-links {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  flex-wrap: wrap;
-}
-.all-link-diyanet, .all-link-single {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: .88rem;
-  color: var(--gold);
-  text-decoration: none;
-  transition: color .2s;
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  cursor: pointer;
-}
+.all-meal { font-family: 'Amiri', serif; font-style: italic; font-size: 1rem; line-height: 1.85; color: var(--text); border-left: 2px solid var(--gold-dim); padding-left: 1rem; margin-bottom: .75rem; }
+.all-links { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.all-link-diyanet, .all-link-single { font-family: 'Cormorant Garamond', serif; font-size: .88rem; color: var(--gold); text-decoration: none; transition: color .2s; display: inline-flex; align-items: center; gap: .3rem; cursor: pointer; }
 .all-link-diyanet:hover, .all-link-single:hover { color: var(--gold-lt); text-decoration: underline; }
 
-/* hidden */
 .hidden { display: none !important; }
 
 /* ── Keyboard hint ── */
-.kbd-hint {
-  text-align: center;
-  color: var(--muted);
-  font-family: 'Cormorant Garamond', serif;
-  font-size: .85rem;
-  margin-top: .5rem;
+.kbd-hint { text-align: center; color: var(--muted); font-family: 'Cormorant Garamond', serif; font-size: .85rem; margin-top: .5rem; }
+kbd { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: .1em .35em; font-size: .8rem; font-family: monospace; }
+
+/* ── Tefeül toast ── */
+.efeful-toast {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(120%);
+  background: linear-gradient(135deg, #2a1560, var(--efeful));
+  color: #fff; font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 1.05rem; border-radius: 100px; padding: .6rem 1.75rem;
+  box-shadow: 0 4px 24px rgba(123,79,201,.5);
+  z-index: 100; transition: transform .4s cubic-bezier(.4,0,.2,1);
+  white-space: nowrap; pointer-events: none;
 }
-kbd {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: .1em .35em;
-  font-size: .8rem;
-  font-family: monospace;
-}
+.efeful-toast.show { transform: translateX(-50%) translateY(0); }
 
 /* ── Animations ── */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .card { animation: fadeIn .3s ease; }
-.card-entering { animation: fadeIn .3s ease; }
 
-/* ── Responsive ── */
+/* Card flip-in for new cards */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+.card.anim { animation: card-in .3s cubic-bezier(.4,0,.2,1); }
+
 @media (max-width: 600px) {
   .card { padding: 1.75rem 1.25rem 1.5rem; }
   .entry-emir { font-size: 1.1rem; }
   .nav-btn span { display: none; }
   .nav-btn { padding: .6rem .9rem; }
+  .controls { gap: .5rem; }
 }
 </style>
 </head>
@@ -495,6 +312,21 @@ kbd {
       <button class="mode-btn active" id="btn-single" onclick="setMode('single')">Tek Tek</button>
       <button class="mode-btn" id="btn-all" onclick="setMode('all')">Tümü</button>
     </div>
+
+    <!-- Tefeül button -->
+    <button class="btn-efeful" id="btn-efeful" onclick="toggleEfeful()" title="Rastgele karıştırılmış sırayla gez">
+      <svg class="shuffle-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+        <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+      </svg>
+      Tefeül
+    </button>
+
+    <div class="efeful-badge" id="efeful-badge">
+      <span class="dot"></span>
+      Tefeül modu
+    </div>
+
     <div class="counter" id="counter"><strong>1</strong> / 201</div>
   </div>
 
@@ -516,6 +348,12 @@ kbd {
             Diyanet Meali
           </a>
           <div class="actions">
+            <button class="btn-skip" onclick="skipEfeful()" title="Farklı bir maddeye atla">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="5 4 15 12 5 20"/><line x1="19" y1="4" x2="19" y2="20"/>
+              </svg>
+              Atla
+            </button>
             <a class="btn-share" id="s-share" href="#" target="_blank" rel="noopener">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.762l7.73-8.835L1.964 2.25H8.2l4.259 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               X'te Paylaş
@@ -537,7 +375,7 @@ kbd {
       </div>
 
       <div class="kbd-hint">
-        <kbd>←</kbd> <kbd>→</kbd> klavye ile gezin &nbsp;·&nbsp; <kbd>A</kbd> tümünü göster
+        <kbd>←</kbd> <kbd>→</kbd> klavye · <kbd>A</kbd> tümü · <kbd>E</kbd> tefeül · <kbd>R</kbd> rastgele
       </div>
     </div>
   </div>
@@ -551,100 +389,155 @@ kbd {
   </div>
 </div>
 
+<!-- Tefeül toast -->
+<div class="efeful-toast" id="efeful-toast"></div>
+
 <script>
 const ENTRIES = [{"id": 1, "emir": "Kur'an okuyun!", "ref": "Alak, 1", "sure": "Alak", "meal": "Yaratan Rabbinin adıyla oku!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/alak-suresi-96/ayet-1/diyanet-isleri-baskanligi-meali-1"}, {"id": 2, "emir": "Kulluk görevlerinizi yerine getirmenizi engelleyenlere itaat etmeyin!", "ref": "Alak, 19", "sure": "Alak", "meal": "Sakın! Ona boyun eğme; secde et ve Rabbine yaklaş!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/alak-suresi-96/ayet-19/diyanet-isleri-baskanligi-meali-1"}, {"id": 3, "emir": "Secde edin!", "ref": "Alak, 19", "sure": "Alak", "meal": "Sakın! Ona boyun eğme; secde et ve Rabbine yaklaş!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/alak-suresi-96/ayet-19/diyanet-isleri-baskanligi-meali-1"}, {"id": 4, "emir": "İnkârcılara itaat etmeyin!", "ref": "Kalem, 8", "sure": "Kalem", "meal": "O hâlde yalanlayanlara boyun eğme. Onlar isterler ki yumuşak davranasın, onlar da sana yumuşak davransınlar. Şu aşağılık, durmadan yemin eden, kınayan, söz taşıyan, hayra engel olan, saldırgan, günahkâr, kaba ve kötü huylu kimseye uyma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/kalem-suresi-68/ayet-8/diyanet-isleri-baskanligi-meali-1"}, {"id": 5, "emir": "Sabırlı olun!", "ref": "Kalem, 48", "sure": "Kalem", "meal": "Rabbinin hükmüne sabret; balığın sahibi Yunus gibi olma. O, üzüntüden boğularak Rabbine seslenmişti.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/kalem-suresi-68/ayet-48/diyanet-isleri-baskanligi-meali-1"}, {"id": 6, "emir": "Geceleri değerlendirin!", "ref": "Müzzemmil, 2", "sure": "Müzzemmil", "meal": "Geceleyin biraz hariç olmak üzere kalk! Gecenin yarısı kadar kalk; ya bundan biraz eksilt ya da üstüne ekle ve Kur'an'ı tane tane oku.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 7, "emir": "Allah'ın adını anın ve tüm benliğinizle O'na yönelin!", "ref": "Müzzemmil, 9", "sure": "Müzzemmil", "meal": "Doğunun da batının da Rabbi O'dur; O'ndan başka ilah yoktur. O hâlde yalnızca O'nu vekil edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 8, "emir": "Yalnız Allah'a dayanıp güvenin!", "ref": "Müzzemmil, 9", "sure": "Müzzemmil", "meal": "Doğunun da batının da Rabbi O'dur; O'ndan başka ilah yoktur. O hâlde yalnızca O'nu vekil edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 9, "emir": "Kur'an'dan kolayınıza geleni okuyun!", "ref": "Müzzemmil, 20", "sure": "Müzzemmil", "meal": "Kur'an'dan kolayınıza geleni okuyun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-20/diyanet-isleri-baskanligi-meali-1"}, {"id": 10, "emir": "Namaz kılın!", "ref": "Müzzemmil, 20", "sure": "Müzzemmil", "meal": "Namazı dosdoğru kılın, zekâtı verin ve Allah'a güzel bir borç verin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-20/diyanet-isleri-baskanligi-meali-1"}, {"id": 11, "emir": "Zekâtı verin!", "ref": "Müzzemmil, 20", "sure": "Müzzemmil", "meal": "Namazı dosdoğru kılın, zekâtı verin ve Allah'a güzel bir borç verin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-20/diyanet-isleri-baskanligi-meali-1"}, {"id": 12, "emir": "Allah'tan af dileyin!", "ref": "Müzzemmil, 20", "sure": "Müzzemmil", "meal": "Allah'tan bağışlama dileyin. Şüphesiz Allah çok bağışlayan, çok esirgeyendir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muzzemmil-suresi-73/ayet-20/diyanet-isleri-baskanligi-meali-1"}, {"id": 13, "emir": "İnsanları uyarın!", "ref": "Müddessir, 2", "sure": "Müddessir", "meal": "Kalk ve uyar!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muddessir-suresi-74/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 14, "emir": "Her türlü pislikten uzak durun!", "ref": "Müddessir, 4", "sure": "Müddessir", "meal": "Elbiseni temiz tut! Pislikten kaçın!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muddessir-suresi-74/ayet-4/diyanet-isleri-baskanligi-meali-1"}, {"id": 15, "emir": "Allah'ın adını yüceltin!", "ref": "A'la, 1", "sure": "A'la", "meal": "En Yüce Rabbinin adını tespih et; O'nu her türlü noksanlıktan münezzeh kıl!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/ala-suresi-87/ayet-1/diyanet-isleri-baskanligi-meali-1"}, {"id": 16, "emir": "Kur'an'la öğüt verin!", "ref": "A'la, 9", "sure": "A'la", "meal": "Öğüt ver, eğer öğüt fayda verirse.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/ala-suresi-87/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 17, "emir": "Yetimi horlamayın! Yetimin hakkına dokunmayın!", "ref": "Duha, 9", "sure": "Duha", "meal": "Öyleyse yetimi sakın ezme!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/duha-suresi-93/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 18, "emir": "Bir şey isteyeni hor görmeyin!", "ref": "Duha, 10", "sure": "Duha", "meal": "Dilenci ve isteyeni de sakın azarlama!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/duha-suresi-93/ayet-10/diyanet-isleri-baskanligi-meali-1"}, {"id": 19, "emir": "Dilenciyi azarlamayın!", "ref": "Duha, 10", "sure": "Duha", "meal": "Dilenci ve isteyeni de sakın azarlama!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/duha-suresi-93/ayet-10/diyanet-isleri-baskanligi-meali-1"}, {"id": 20, "emir": "Allah'ın nimetlerini dile getirin!", "ref": "Duha, 11", "sure": "Duha", "meal": "Rabbinin nimetini minnettarlıkla anlat!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/duha-suresi-93/ayet-11/diyanet-isleri-baskanligi-meali-1"}, {"id": 21, "emir": "Sürekli faaliyette olun, çalışkan olun!", "ref": "İnşirah, 7", "sure": "İnşirah", "meal": "O hâlde boş kaldığın zaman hemen yeni bir işe veya ibadete kalk!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/insirah-suresi-94/ayet-7/diyanet-isleri-baskanligi-meali-1"}, {"id": 22, "emir": "Allah'ı anmaktan yüz çevirenden yüz çevirin!", "ref": "Necm, 29", "sure": "Necm", "meal": "Bizim zikrimizden yüz çeviren ve dünya hayatından başka bir şey istemeyen kimselerin yüzünden dön.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/necm-suresi-53/ayet-29/diyanet-isleri-baskanligi-meali-1"}, {"id": 23, "emir": "Dünya hayatından başka bir şey istemeyenden yüz çevirin!", "ref": "Necm, 29", "sure": "Necm", "meal": "Bizim zikrimizden yüz çeviren ve dünya hayatından başka bir şey istemeyen kimselerin yüzünden dön.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/necm-suresi-53/ayet-29/diyanet-isleri-baskanligi-meali-1"}, {"id": 24, "emir": "Kendinizi temize çıkarmayın!", "ref": "Necm, 32", "sure": "Necm", "meal": "Kendinizi temize çıkarmayın; O, kimi sakındığını en iyi bilendir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/necm-suresi-53/ayet-32/diyanet-isleri-baskanligi-meali-1"}, {"id": 25, "emir": "Rabbinizden size indirilene uyun!", "ref": "A'raf, 3", "sure": "A'raf", "meal": "Rabbinizden size indirilene uyun; O'ndan başka dostlara uymayın. Ne kadar az öğüt alıyorsunuz!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-3/diyanet-isleri-baskanligi-meali-1"}, {"id": 26, "emir": "Allah'tan başka dostlar edinip peşlerinden gitmeyin!", "ref": "A'raf, 3", "sure": "A'raf", "meal": "Rabbinizden size indirilene uyun; O'ndan başka dostlara uymayın. Ne kadar az öğüt alıyorsunuz!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-3/diyanet-isleri-baskanligi-meali-1"}, {"id": 27, "emir": "Dini yalnız Allah'a özgüleyerek dua edin!", "ref": "A'raf, 29", "sure": "A'raf", "meal": "Rabbim adaleti emretti. Her mescitte yüzlerinizi O'na doğrultun ve dini yalnız O'na has kılarak O'na yalvarın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-29/diyanet-isleri-baskanligi-meali-1"}, {"id": 28, "emir": "İbadethanelerde temiz ve güzel giyinin!", "ref": "A'raf, 31", "sure": "A'raf", "meal": "Ey Âdemoğulları! Her mescitte güzel elbiselerinizi giyin; yiyin içın fakat israf etmeyin; çünkü Allah israf edenleri sevmez.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-31/diyanet-isleri-baskanligi-meali-1"}, {"id": 29, "emir": "Nimetlerden faydalanın ama israf etmeyin!", "ref": "A'raf, 31", "sure": "A'raf", "meal": "Ey Âdemoğulları! Her mescitte güzel elbiselerinizi giyin; yiyin, için fakat israf etmeyin; çünkü Allah israf edenleri sevmez.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-31/diyanet-isleri-baskanligi-meali-1"}, {"id": 30, "emir": "Dualarınızı yalvara yakara, gizlice yapın!", "ref": "A'raf, 55", "sure": "A'raf", "meal": "Rabbinize yalvararak ve gizlice dua edin. Bilesiniz ki O, haddi aşanları sevmez.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-55/diyanet-isleri-baskanligi-meali-1"}, {"id": 31, "emir": "Yeryüzünde bozgunculuk yapmayın!", "ref": "A'raf, 56", "sure": "A'raf", "meal": "Yeryüzünde düzeltilmesinden sonra bozgunculuk yapmayın; korkarak ve umarak O'na dua edin. Şüphesiz Allah'ın rahmeti iyilik edenlere yakındır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-56/diyanet-isleri-baskanligi-meali-1"}, {"id": 32, "emir": "Allah'a güzel isimleriyle dua edin!", "ref": "A'raf, 180", "sure": "A'raf", "meal": "En güzel isimler Allah'ındır; O'na bu güzel isimlerle dua edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-180/diyanet-isleri-baskanligi-meali-1"}, {"id": 33, "emir": "Affetmeyi esas alın!", "ref": "A'raf, 199", "sure": "A'raf", "meal": "Sen af yolunu tut, iyiliği emret ve cahillerden yüz çevir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-199/diyanet-isleri-baskanligi-meali-1"}, {"id": 34, "emir": "İyiyi ve güzeli emredin!", "ref": "A'raf, 199", "sure": "A'raf", "meal": "Sen af yolunu tut, iyiliği emret ve cahillerden yüz çevir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-199/diyanet-isleri-baskanligi-meali-1"}, {"id": 35, "emir": "Cahillerden yüz çevirin!", "ref": "A'raf, 199", "sure": "A'raf", "meal": "Sen af yolunu tut, iyiliği emret ve cahillerden yüz çevir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-199/diyanet-isleri-baskanligi-meali-1"}, {"id": 36, "emir": "Şeytandan Allah'a sığının!", "ref": "A'raf, 200", "sure": "A'raf", "meal": "Eğer şeytandan gelen bir vesvese seni dürterse hemen Allah'a sığın; şüphesiz O işitendir, bilendir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-200/diyanet-isleri-baskanligi-meali-1"}, {"id": 37, "emir": "Kur'an okunduğu zaman susun ve dinleyin!", "ref": "A'raf, 204", "sure": "A'raf", "meal": "Kur'an okunduğu zaman onu dinleyin ve susun ki size rahmet edilsin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-204/diyanet-isleri-baskanligi-meali-1"}, {"id": 38, "emir": "Allah'ı benliğinizin içinden anın!", "ref": "A'raf, 205", "sure": "A'raf", "meal": "Rabbini kendi kendine, yalvararak ve ürpererek, yüksek olmayan bir sesle sabah akşam an; gafillerden olma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-205/diyanet-isleri-baskanligi-meali-1"}, {"id": 39, "emir": "Allah'ı sesinizi yükseltmeden anın!", "ref": "A'raf, 205", "sure": "A'raf", "meal": "Rabbini kendi kendine, yalvararak ve ürpererek, yüksek olmayan bir sesle sabah akşam an; gafillerden olma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/araf-suresi-7/ayet-205/diyanet-isleri-baskanligi-meali-1"}, {"id": 40, "emir": "Allah'tan başkasına dua etmeyin!", "ref": "Cin, 18", "sure": "Cin", "meal": "Şüphesiz mescitler Allah'a aittir; o hâlde Allah ile birlikte kimseye ibadet etmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/cin-suresi-72/ayet-18/diyanet-isleri-baskanligi-meali-1"}, {"id": 41, "emir": "Allah'ın üzerinizdeki nimetlerini anın!", "ref": "Fatır, 3", "sure": "Fatır", "meal": "Ey insanlar! Allah'ın size olan nimetini hatırlayın. Allah'tan başka size gökten ve yerden rızık veren bir yaratıcı var mı? O'ndan başka ilah yoktur.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/fatir-suresi-35/ayet-3/diyanet-isleri-baskanligi-meali-1"}, {"id": 42, "emir": "Şeytanı düşman bilin!", "ref": "Fatır, 6", "sure": "Fatır", "meal": "Şüphesiz şeytan sizin düşmanınızdır; öyle ise siz de onu düşman tanıyın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/fatir-suresi-35/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 43, "emir": "Namaza sabırla devam edin!", "ref": "Taha, 132", "sure": "Taha", "meal": "Ailene namazı emret; kendin de ona sabırla devam et. Güzel sonuç takva içindir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/taha-suresi-20/ayet-132/diyanet-isleri-baskanligi-meali-1"}, {"id": 44, "emir": "Ailenize namazı emredin!", "ref": "Taha, 132", "sure": "Taha", "meal": "Ailene namazı emret; kendin de ona sabırla devam et. Güzel sonuç takva içindir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/taha-suresi-20/ayet-132/diyanet-isleri-baskanligi-meali-1"}, {"id": 45, "emir": "Günahkârların nasıl bir sona uğradıklarına bakın!", "ref": "Neml, 69", "sure": "Neml", "meal": "Yeryüzünde gezip dolaşın; sonra günahkârların nasıl bir sona uğradıklarına bakın!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/neml-suresi-27/ayet-69/diyanet-isleri-baskanligi-meali-1"}, {"id": 46, "emir": "Yeryüzünü gezip dolaşın!", "ref": "Neml, 69", "sure": "Neml", "meal": "Yeryüzünde gezip dolaşın; sonra günahkârların nasıl bir sona uğradıklarına bakın!", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/neml-suresi-27/ayet-69/diyanet-isleri-baskanligi-meali-1"}, {"id": 47, "emir": "Allah'tan başka hiçbir varlığa kulluk etmeyin!", "ref": "İsra, 23", "sure": "İsra", "meal": "Rabbin, yalnız kendisine ibadet etmenizi, anne-babanıza da iyi davranmanızı kesinlikle emretti.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-23/diyanet-isleri-baskanligi-meali-1"}, {"id": 48, "emir": "Anne ve babaya çok iyi davranın!", "ref": "İsra, 23", "sure": "İsra", "meal": "Onlardan biri ya da her ikisi yanında yaşlılığa erişirse sakın onlara 'öf!' deme; onları azarlama; ikisine de güzel söz söyle ve alçakgönüllülük kanatlarını ger.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-23/diyanet-isleri-baskanligi-meali-1"}, {"id": 49, "emir": "Akrabaya yardımcı olun!", "ref": "İsra, 26", "sure": "İsra", "meal": "Akrabaya, yoksula ve yolda kalmışa hakkını ver; fakat saçıp savurma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-26/diyanet-isleri-baskanligi-meali-1"}, {"id": 50, "emir": "Düşküne yardımcı olun!", "ref": "İsra, 26", "sure": "İsra", "meal": "Akrabaya, yoksula ve yolda kalmışa hakkını ver; fakat saçıp savurma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-26/diyanet-isleri-baskanligi-meali-1"}, {"id": 51, "emir": "Yolda kalmışa yardımcı olun!", "ref": "İsra, 26", "sure": "İsra", "meal": "Akrabaya, yoksula ve yolda kalmışa hakkını ver; fakat saçıp savurma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-26/diyanet-isleri-baskanligi-meali-1"}, {"id": 52, "emir": "Harcamalarda orta yoldan ayrılmayın!", "ref": "İsra, 29", "sure": "İsra", "meal": "Elini boynuna bağlayıp cimri kesilme; onu büsbütün de açıp savurgan olma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-29/diyanet-isleri-baskanligi-meali-1"}, {"id": 53, "emir": "Geçim kaygısıyla çocuklarınızı öldürmeyin!", "ref": "İsra, 31", "sure": "İsra", "meal": "Yoksulluk endişesiyle çocuklarınızı öldürmeyin. Onları da sizi de biz rızıklandırırız.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-31/diyanet-isleri-baskanligi-meali-1"}, {"id": 54, "emir": "Zinaya yaklaşmayın!", "ref": "İsra, 32", "sure": "İsra", "meal": "Zinaya yaklaşmayın. Çünkü o, son derece çirkin bir iştir ve çok kötü bir yoldur.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-32/diyanet-isleri-baskanligi-meali-1"}, {"id": 55, "emir": "Cana kıymayın!", "ref": "İsra, 33", "sure": "İsra", "meal": "Haklı bir sebep olmadıkça Allah'ın haram kıldığı cana kıymayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-33/diyanet-isleri-baskanligi-meali-1"}, {"id": 56, "emir": "Ahde vefalı olun!", "ref": "İsra, 34", "sure": "İsra", "meal": "Verdiğiniz sözü yerine getirin; çünkü söz, sorumluluk gerektirir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-34/diyanet-isleri-baskanligi-meali-1"}, {"id": 57, "emir": "Ölçü ve tartıda dürüst olun!", "ref": "İsra, 35", "sure": "İsra", "meal": "Ölçtüğünüzde tam ölçün ve doğru terazi ile tartın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-35/diyanet-isleri-baskanligi-meali-1"}, {"id": 58, "emir": "Hakkında bilginiz olmayan şeyin ardına düşmeyin!", "ref": "İsra, 36", "sure": "İsra", "meal": "Hakkında bilgin olmayan şeyin peşine düşme. Çünkü kulak, göz ve kalp; bunların hepsi ondan sorumlu tutulacaktır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-36/diyanet-isleri-baskanligi-meali-1"}, {"id": 59, "emir": "Kibirlenip böbürlenmeyin!", "ref": "İsra, 37", "sure": "İsra", "meal": "Yeryüzünde böbürlenerek yürüme. Çünkü sen yeri yaramazsın ve boyca da dağlara ulaşamazsın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-37/diyanet-isleri-baskanligi-meali-1"}, {"id": 60, "emir": "Namaz sırasında sesinizi ne yükseltin ne de kısın!", "ref": "İsra, 110", "sure": "İsra", "meal": "Namazında sesini ne çok yükselt, ne de çok kıs; ikisi arasında orta bir yol tut.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/isra-suresi-17/ayet-110/diyanet-isleri-baskanligi-meali-1"}, {"id": 61, "emir": "Göklerde ve yerde neler var araştırın!", "ref": "Yunus, 101", "sure": "Yunus", "meal": "Göklerde ve yerde neler var bakın! İman etmeyecek bir topluma ayetler ve uyarılar hiçbir fayda sağlamaz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/yunus-suresi-10/ayet-101/diyanet-isleri-baskanligi-meali-1"}, {"id": 62, "emir": "Zalimlere eğilim göstermeyin!", "ref": "Hud, 113", "sure": "Hud", "meal": "Zulmedenlere meyletmeyin; yoksa size ateş dokunur. Sizin için Allah'tan başka dostlar yoktur.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hud-suresi-11/ayet-113/diyanet-isleri-baskanligi-meali-1"}, {"id": 63, "emir": "Hak dostlarını horlamayın!", "ref": "En'am, 52", "sure": "En'am", "meal": "Sabah akşam Rablerine yalvaran, O'nun rızasını isteyenleri kovma. Onların hesabından sana bir şey yok.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-52/diyanet-isleri-baskanligi-meali-1"}, {"id": 64, "emir": "Dünya hayatının aldattığı kişilerden uzak durun!", "ref": "En'am, 70", "sure": "En'am", "meal": "Dinlerini oyun ve eğlence edinen, dünya hayatının aldattığı kimseleri bırak.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-70/diyanet-isleri-baskanligi-meali-1"}, {"id": 65, "emir": "Dinlerini oyun ve eğlence haline getirenlerden uzak durun!", "ref": "En'am, 70", "sure": "En'am", "meal": "Dinlerini oyun ve eğlence edinen, dünya hayatının aldattığı kimseleri bırak.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-70/diyanet-isleri-baskanligi-meali-1"}, {"id": 66, "emir": "Diğer dinlere ve inananlarına sövmeyin!", "ref": "En'am, 108", "sure": "En'am", "meal": "Allah'tan başkasına yalvardıklarına sövmeyin; sonra onlar da haddi aşarak bilgisizce Allah'a söverler.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-108/diyanet-isleri-baskanligi-meali-1"}, {"id": 67, "emir": "Üzerine Allah'ın adı anılan şeylerden yiyin!", "ref": "En'am, 118", "sure": "En'am", "meal": "Allah'ın adı anılarak kesilenlerden yiyin; eğer Allah'ın ayetlerine inanıyorsanız.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-118/diyanet-isleri-baskanligi-meali-1"}, {"id": 68, "emir": "Günahın görüneninden de görünmeyeninden de kaçının!", "ref": "En'am, 120", "sure": "En'am", "meal": "Günahın açığını da gizlisini de bırakın. Çünkü günah kazananlar, yaptıklarının karşılığını mutlaka göreceklerdir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-120/diyanet-isleri-baskanligi-meali-1"}, {"id": 69, "emir": "Adil olun!", "ref": "En'am, 152", "sure": "En'am", "meal": "Konuştuğunuzda akrabanız dahi olsa adaletli olun. Allah'a verdiğiniz sözü tutun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enam-suresi-6/ayet-152/diyanet-isleri-baskanligi-meali-1"}, {"id": 70, "emir": "Dini Allah'a has kılın ona kulluk edin!", "ref": "Zümer, 2", "sure": "Zümer", "meal": "Şüphesiz biz sana kitabı hak ile indirdik; öyleyse dini yalnız Allah'a has kılarak O'na kulluk et.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/zumer-suresi-39/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 71, "emir": "Allah'tan ümit kesmeyin!", "ref": "Zümer, 53", "sure": "Zümer", "meal": "Ey kendi aleyhlerine haddi aşan kullarım! Allah'ın rahmetinden ümit kesmeyin. Şüphesiz Allah bütün günahları bağışlar.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/zumer-suresi-39/ayet-53/diyanet-isleri-baskanligi-meali-1"}, {"id": 72, "emir": "Kötülüğü en güzel tavırla savın!", "ref": "Fussilet, 34", "sure": "Fussilet", "meal": "İyilik ile kötülük eşit olmaz. Sen kötülüğü en güzel olan şeyle sav; o zaman seninle aranda düşmanlık bulunan kimse sanki sıcak bir dost gibi olur.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/fussilet-suresi-41/ayet-34/diyanet-isleri-baskanligi-meali-1"}, {"id": 73, "emir": "İhtilaflarla karşılaştığınızda hükmü Allah'a bırakın!", "ref": "Şura, 10", "sure": "Şura", "meal": "Hakkında ihtilafa düştüğünüz herhangi bir şeyin hükmü Allah'a aittir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/sura-suresi-42/ayet-10/diyanet-isleri-baskanligi-meali-1"}, {"id": 74, "emir": "Dinde ayrı düşüp fırkalara ayrılmayın!", "ref": "Şura, 13", "sure": "Şura", "meal": "Dini dosdoğru ayakta tutun ve onda ayrılığa düşmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/sura-suresi-42/ayet-13/diyanet-isleri-baskanligi-meali-1"}, {"id": 75, "emir": "Dosdoğru olun!", "ref": "Şura, 15", "sure": "Şura", "meal": "Emrolunduğun gibi dosdoğru ol.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/sura-suresi-42/ayet-15/diyanet-isleri-baskanligi-meali-1"}, {"id": 76, "emir": "Resulullah'a ve ailesine sevgi, saygı gösterin!", "ref": "Şura, 23", "sure": "Şura", "meal": "Buna karşılık sizden, akrabalık sevgisinden başka bir ücret istemiyorum.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/sura-suresi-42/ayet-23/diyanet-isleri-baskanligi-meali-1"}, {"id": 77, "emir": "Allah'a kaçıp sığının!", "ref": "Zariyat, 50", "sure": "Zariyat", "meal": "Allah'a kaçın! Şüphesiz ben size O'ndan gelen apaçık bir uyarıcıyım.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/zariyat-suresi-51/ayet-50/diyanet-isleri-baskanligi-meali-1"}, {"id": 78, "emir": "Gelecek hakkında kesin hüküm vermeyin!", "ref": "Kehf, 23", "sure": "Kehf", "meal": "Hiçbir şey için 'Ben onu yarın yapacağım' deme. Ancak Allah dilerse de.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/kehf-suresi-18/ayet-23/diyanet-isleri-baskanligi-meali-1"}, {"id": 79, "emir": "Müminlerin yanlarında bulun!", "ref": "Kehf, 28", "sure": "Kehf", "meal": "Sabah akşam Rablerine dua eden, O'nun rızasını isteyen kimselerle birlikte sabret.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/kehf-suresi-18/ayet-28/diyanet-isleri-baskanligi-meali-1"}, {"id": 80, "emir": "Bilmediklerinizi bilenlere sorun!", "ref": "Nahl, 43", "sure": "Nahl", "meal": "Bilmiyorsanız zikir ehlini, alimleri sorun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-43/diyanet-isleri-baskanligi-meali-1"}, {"id": 81, "emir": "Allah'ın emsallerini aramaya kalkmayın!", "ref": "Nahl, 74", "sure": "Nahl", "meal": "Allah'a emsaller bulmaya kalkmayın. Şüphesiz Allah bilir, siz bilmezsiniz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-74/diyanet-isleri-baskanligi-meali-1"}, {"id": 82, "emir": "Yeminlerinizi bozmayın!", "ref": "Nahl, 91", "sure": "Nahl", "meal": "Allah'a verdiğiniz sözü yerine getirin; pekiştirdikten sonra yeminleri bozmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-91/diyanet-isleri-baskanligi-meali-1"}, {"id": 83, "emir": "Nimetlere şükredin!", "ref": "Nahl, 114", "sure": "Nahl", "meal": "Allah'ın size rızık olarak verdiklerinin helal ve temiz olanından yiyin ve O'nun nimetine şükredin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-114/diyanet-isleri-baskanligi-meali-1"}, {"id": 84, "emir": "Uydurma haramlar icat etmeyin!", "ref": "Nahl, 116", "sure": "Nahl", "meal": "'Şu helal, bu haramdır' diyerek Allah'a karşı yalan uydurmayın. Şüphesiz Allah'a karşı yalan uyduranlar iflah olmaz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-116/diyanet-isleri-baskanligi-meali-1"}, {"id": 85, "emir": "Hz. İbrahim'in dinine uyun!", "ref": "Nahl, 123", "sure": "Nahl", "meal": "Hakka yönelen İbrahim'in dinine uy; o müşriklerden değildi.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-123/diyanet-isleri-baskanligi-meali-1"}, {"id": 86, "emir": "Allah'ın yoluna çağrıyı hikmetle, güzel öğütle, güzel tartışmayla yapın!", "ref": "Nahl, 125", "sure": "Nahl", "meal": "Rabbinin yoluna hikmetle ve güzel öğütle davet et ve onlarla en güzel biçimde mücadele et.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-125/diyanet-isleri-baskanligi-meali-1"}, {"id": 87, "emir": "Haksızlığa karşılık verirken ölçülü davranın!", "ref": "Nahl, 126", "sure": "Nahl", "meal": "Eğer cezalandıracaksanız size yapılan işkencenin dengiyle karşılık verin. Eğer sabrederseniz elbette bu sabredenler için daha hayırlıdır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nahl-suresi-16/ayet-126/diyanet-isleri-baskanligi-meali-1"}, {"id": 88, "emir": "Kendi ellerindeki parça parça bilgileri tek doğru sananlardan uzak durun!", "ref": "Müminun, 52", "sure": "Müminun", "meal": "Her topluluk elindekiyle sevinip böbürlenmektedir. Bırak onları o dalgınlıkları içinde bir süre.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/muminun-suresi-23/ayet-52/diyanet-isleri-baskanligi-meali-1"}, {"id": 89, "emir": "Sabır ve namaz ile yardım dileyin!", "ref": "Bakara, 45", "sure": "Bakara", "meal": "Sabır ve namazla yardım isteyin. Şüphesiz bu, huşu sahiplerine daha kolaydır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-45/diyanet-isleri-baskanligi-meali-1"}, {"id": 90, "emir": "Hayırlarda yarışın!", "ref": "Bakara, 148", "sure": "Bakara", "meal": "Öyleyse hayırlarda yarışın. Nerede olursanız olun Allah hepinizi bir araya getirir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-148/diyanet-isleri-baskanligi-meali-1"}, {"id": 91, "emir": "Kâbe'yi kıble edinin!", "ref": "Bakara, 150", "sure": "Bakara", "meal": "Artık yüzünü Mescid-i Haram tarafına çevir. Nerede olursanız olun yüzünüzü o yöne çevirin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-150/diyanet-isleri-baskanligi-meali-1"}, {"id": 92, "emir": "Helal yiyeceklerden yiyin!", "ref": "Bakara, 168", "sure": "Bakara", "meal": "Ey insanlar! Yeryüzündeki şeylerin helal ve temiz olanlarından yiyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-168/diyanet-isleri-baskanligi-meali-1"}, {"id": 93, "emir": "Temiz yiyeceklerden yiyin!", "ref": "Bakara, 168", "sure": "Bakara", "meal": "Ey insanlar! Yeryüzündeki şeylerin helal ve temiz olanlarından yiyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-168/diyanet-isleri-baskanligi-meali-1"}, {"id": 94, "emir": "Kısası uygulayın!", "ref": "Bakara, 178", "sure": "Bakara", "meal": "Kısasta sizin için hayat vardır ey akıl sahipleri! Umulur ki sakınırsınız.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-178/diyanet-isleri-baskanligi-meali-1"}, {"id": 95, "emir": "Ramazan ayını oruçlu geçirin!", "ref": "Bakara, 183", "sure": "Bakara", "meal": "Oruç sizden önce gelip geçmiş ümmetlere de farz kılınmıştı; Allah'a karşı gelmekten sakınmanız için size de farz kılındı.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-183/diyanet-isleri-baskanligi-meali-1"}, {"id": 96, "emir": "Mescitlerde ibadete çekilmiş olduğunuz zamanlarda kadınlarla birleşmeyin!", "ref": "Bakara, 187", "sure": "Bakara", "meal": "İtikâfta, yani mescitlerde ibadete çekilmiş olduğunuzda kadınlarla birleşmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-187/diyanet-isleri-baskanligi-meali-1"}, {"id": 97, "emir": "Birbirinizin mal varlığını haksız yoldan yemeyin!", "ref": "Bakara, 188", "sure": "Bakara", "meal": "Mallarınızı aranızda haksız yollarla yemeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-188/diyanet-isleri-baskanligi-meali-1"}, {"id": 98, "emir": "Rüşvete bulaşmayın!", "ref": "Bakara, 188", "sure": "Bakara", "meal": "Mallarınızı aranızda haksız yollarla yemeyin; insanların mallarını haksız yollarla yemek için onları yöneticilere rüşvet olarak vermeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-188/diyanet-isleri-baskanligi-meali-1"}, {"id": 99, "emir": "Sizinle çarpışanlara karşı meşru savunma hakkınızı kullanın!", "ref": "Bakara, 190", "sure": "Bakara", "meal": "Allah yolunda sizinle savaşanlara karşı savaşın; fakat aşırı gitmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-190/diyanet-isleri-baskanligi-meali-1"}, {"id": 100, "emir": "Sahip olduğunuz nimetleri Allah yolunda paylaşın!", "ref": "Bakara, 195", "sure": "Bakara", "meal": "Allah yolunda infak edin, kendinizi tehlikeye atmayın ve iyilik edin. Şüphesiz Allah iyilik edenleri sever.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-195/diyanet-isleri-baskanligi-meali-1"}, {"id": 101, "emir": "Yaptığınızı güzel yapın!", "ref": "Bakara, 195", "sure": "Bakara", "meal": "Allah yolunda infak edin, kendinizi tehlikeye atmayın ve iyilik edin. Şüphesiz Allah iyilik edenleri sever.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-195/diyanet-isleri-baskanligi-meali-1"}, {"id": 102, "emir": "Kendinizi tehlikeye atmayın!", "ref": "Bakara, 195", "sure": "Bakara", "meal": "Allah yolunda infak edin, kendinizi tehlikeye atmayın ve iyilik edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-195/diyanet-isleri-baskanligi-meali-1"}, {"id": 103, "emir": "Barışı hep birlikte gerçekleştirin!", "ref": "Bakara, 208", "sure": "Bakara", "meal": "Ey iman edenler! Hepiniz topluca barışa girin; şeytanın adımlarına uymayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-208/diyanet-isleri-baskanligi-meali-1"}, {"id": 104, "emir": "Şeytanın adımlarını izlemeyin!", "ref": "Bakara, 208", "sure": "Bakara", "meal": "Ey iman edenler! Hepiniz topluca barışa girin; şeytanın adımlarına uymayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-208/diyanet-isleri-baskanligi-meali-1"}, {"id": 105, "emir": "Müşrik kadın ve erkeklerle evlenmeyin!", "ref": "Bakara, 221", "sure": "Bakara", "meal": "Allah'a ortak koşan kadınlarla iman etmedikçe evlenmeyin; Allah'a ortak koşan erkeklerle de iman etmedikçe mümin kadınları evlendirmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-221/diyanet-isleri-baskanligi-meali-1"}, {"id": 106, "emir": "Hayızlı kadınlarla cinsel temas kurmayın!", "ref": "Bakara, 222", "sure": "Bakara", "meal": "Âdet zamanında kadınlardan uzak durun; temizleninceye kadar onlara yaklaşmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-222/diyanet-isleri-baskanligi-meali-1"}, {"id": 107, "emir": "Kadınlara cinsellik için yaklaştığınızda Allah'ın size emrettiği yerden gidin!", "ref": "Bakara, 222", "sure": "Bakara", "meal": "Temizlendiklerinde Allah'ın size emrettiği yerden onlara yaklaşın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-222/diyanet-isleri-baskanligi-meali-1"}, {"id": 108, "emir": "Yeminlerinizi bahane ederek iyilikten kaçmayın!", "ref": "Bakara, 224", "sure": "Bakara", "meal": "İyilik etmenize engel olarak Allah'ı yeminlerinize alet etmeyin. Allah işitendir, bilendir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-224/diyanet-isleri-baskanligi-meali-1"}, {"id": 109, "emir": "Namazlara özellikle orta namaza devam edin!", "ref": "Bakara, 238", "sure": "Bakara", "meal": "Namazlara ve özellikle orta namaza devam edin; Allah'a gönülden boyun eğerek namaza durun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-238/diyanet-isleri-baskanligi-meali-1"}, {"id": 110, "emir": "Dinde zorlamaya yapmayın!", "ref": "Bakara, 256", "sure": "Bakara", "meal": "Dinde zorlama yoktur. Çünkü doğruluk sapıklıktan iyice ayrılmıştır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-256/diyanet-isleri-baskanligi-meali-1"}, {"id": 111, "emir": "Yaptığınız iyilikleri başa kakmayın!", "ref": "Bakara, 264", "sure": "Bakara", "meal": "Sadakalarınızı başa kakma ve incitme yoluyla boşa çıkarmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-264/diyanet-isleri-baskanligi-meali-1"}, {"id": 112, "emir": "Beğenip almayacağınız şeyleri başkalarına vermeye kalkmayın!", "ref": "Bakara, 267", "sure": "Bakara", "meal": "Kendinizin göz yummadan alamayacağınız kötü şeyleri Allah yolunda vermeye kalkmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-267/diyanet-isleri-baskanligi-meali-1"}, {"id": 113, "emir": "Faizden uzak durun!", "ref": "Bakara, 275", "sure": "Bakara", "meal": "Allah alışverişi helal, faizi haram kılmıştır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-275/diyanet-isleri-baskanligi-meali-1"}, {"id": 114, "emir": "Borçlanma işlemlerini yazıya geçirin!", "ref": "Bakara, 282", "sure": "Bakara", "meal": "Belirli bir süre için birbirinizle borç alışverişinde bulunduğunuzda bunu yazın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-282/diyanet-isleri-baskanligi-meali-1"}, {"id": 115, "emir": "Borçlanma işlemlerinde şahit bulundurun!", "ref": "Bakara, 282", "sure": "Bakara", "meal": "Erkeklerinizden iki de tanık tutun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-282/diyanet-isleri-baskanligi-meali-1"}, {"id": 116, "emir": "Alışverişlerinizde şahit bulundurun!", "ref": "Bakara, 282", "sure": "Bakara", "meal": "Alışveriş yaptığınızda da şahit tutun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-282/diyanet-isleri-baskanligi-meali-1"}, {"id": 117, "emir": "Şahitlikten kaçınmayın!", "ref": "Bakara, 283", "sure": "Bakara", "meal": "Şahitliği gizlemeyin. Kim onu gizlerse şüphesiz kalbi günahlıdır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/bakara-suresi-2/ayet-283/diyanet-isleri-baskanligi-meali-1"}, {"id": 118, "emir": "Allah'ın elçisine itaat edin!", "ref": "Enfal, 1", "sure": "Enfal", "meal": "Allah'a itaat edin, elçisi ile aranızı düzeltin; eğer iman ediyorsanız.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enfal-suresi-8/ayet-1/diyanet-isleri-baskanligi-meali-1"}, {"id": 119, "emir": "Savaştan kaçmayın!", "ref": "Enfal, 15", "sure": "Enfal", "meal": "Ey iman edenler! Savaşta kâfirlerle karşılaştığınızda onlara arkanızı dönmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enfal-suresi-8/ayet-15/diyanet-isleri-baskanligi-meali-1"}, {"id": 120, "emir": "Allah'a ve Resulüne hıyanet etmeyin!", "ref": "Enfal, 27", "sure": "Enfal", "meal": "Ey iman edenler! Allah'a ve Peygamber'e ihanet etmeyin; bile bile kendi emanetlerinize ihanet etmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enfal-suresi-8/ayet-27/diyanet-isleri-baskanligi-meali-1"}, {"id": 121, "emir": "Cihatta, gösteriş yaparak yurtlarından çıkan ve Allah yolundan alıkoyanlar gibi olmayın!", "ref": "Enfal, 47", "sure": "Enfal", "meal": "Yurtlarından çalım satarak, insanlara gösteriş yaparak ve Allah yolundan alıkoyarak çıkanlar gibi olmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enfal-suresi-8/ayet-47/diyanet-isleri-baskanligi-meali-1"}, {"id": 122, "emir": "Düşmanı savaştan caydırıcı önlemler alın!", "ref": "Enfal, 60", "sure": "Enfal", "meal": "Onlara karşı gücünüzün yettiği kadar kuvvet hazırlayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enfal-suresi-8/ayet-60/diyanet-isleri-baskanligi-meali-1"}, {"id": 123, "emir": "Barış eğilimlerine olumlu karşılık verin!", "ref": "Enfal, 61", "sure": "Enfal", "meal": "Eğer barışa yanaşırlarsa sen de ona yanaş ve Allah'a tevekkül et.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/enfal-suresi-8/ayet-61/diyanet-isleri-baskanligi-meali-1"}, {"id": 124, "emir": "İnananlara bırakıp kâfirleri dost edinmeyin!", "ref": "Ali İmran, 28", "sure": "Ali İmran", "meal": "Müminler, müminleri bırakıp kâfirleri dost edinmesinler.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-28/diyanet-isleri-baskanligi-meali-1"}, {"id": 125, "emir": "Hacca gidin!", "ref": "Ali İmran, 96", "sure": "Ali İmran", "meal": "Oraya yol bulabilen her insana, Allah için o evi haccetmek farzdır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-96/diyanet-isleri-baskanligi-meali-1"}, {"id": 126, "emir": "Hayra çağıran, iyiliği emreden, kötülüğü engelleyen ekipler oluşturun!", "ref": "Ali İmran, 104", "sure": "Ali İmran", "meal": "Sizden, hayra çağıran, iyiliği emreden ve kötülükten alıkoyan bir topluluk bulunsun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-104/diyanet-isleri-baskanligi-meali-1"}, {"id": 127, "emir": "Üzülüp gevşemeyin!", "ref": "Ali İmran, 139", "sure": "Ali İmran", "meal": "Gevşemeyin, üzülmeyin; eğer gerçekten iman ediyorsanız mutlaka üstün gelecek olan sizsiniz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-139/diyanet-isleri-baskanligi-meali-1"}, {"id": 128, "emir": "Yönetimde istişareyi esas alın!", "ref": "Ali İmran, 159", "sure": "Ali İmran", "meal": "İş konusunda onlarla istişare et; azmettiğinde de Allah'a tevekkül et.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-159/diyanet-isleri-baskanligi-meali-1"}, {"id": 129, "emir": "Allah'tan korkun!", "ref": "Ali İmran, 175", "sure": "Ali İmran", "meal": "Siz onlardan korkmayın, benden korkun; eğer inanmış kimselerseniz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-175/diyanet-isleri-baskanligi-meali-1"}, {"id": 130, "emir": "Savaşa hazırlıklı ve uyanık bulunun!", "ref": "Ali İmran, 200", "sure": "Ali İmran", "meal": "Ey iman edenler! Sabredin, cihada hazır ve uyanık olun ve Allah'a karşı gelmekten sakının ki kurtuluşa eresiniz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/al-i-imran-suresi-3/ayet-200/diyanet-isleri-baskanligi-meali-1"}, {"id": 131, "emir": "Evlatlıklarınızı öz babalarına nispet ederek çağırın!", "ref": "Ahzab, 5", "sure": "Ahzab", "meal": "Onları babalarına nispet ederek çağırın; bu, Allah katında daha adaletlidir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/ahzab-suresi-33/ayet-5/diyanet-isleri-baskanligi-meali-1"}, {"id": 132, "emir": "Peygamberinizin şanını yüceltin!", "ref": "Ahzab, 56", "sure": "Ahzab", "meal": "Ey iman edenler! Peygamber'e salat edin ve tam bir teslimiyetle selam verin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/ahzab-suresi-33/ayet-56/diyanet-isleri-baskanligi-meali-1"}, {"id": 133, "emir": "Mümin kadınlar dış örtülerinizi üzerinize alın!", "ref": "Ahzab, 59", "sure": "Ahzab", "meal": "Ey Peygamber! Eşlerine, kızlarına ve müminlerin kadınlarına dış örtülerini üzerlerine almalarını söyle.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/ahzab-suresi-33/ayet-59/diyanet-isleri-baskanligi-meali-1"}, {"id": 134, "emir": "Kâfirlerle olan nikâhlarınızı bitirin!", "ref": "Mümtehine, 10", "sure": "Mümtehine", "meal": "Kâfir kadınları nikâhınızda tutmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/mumtehine-suresi-60/ayet-10/diyanet-isleri-baskanligi-meali-1"}, {"id": 135, "emir": "Allah'ın gazap ettiği bir toplulukla dostluk etmeyin!", "ref": "Mümtehine, 13", "sure": "Mümtehine", "meal": "Ey iman edenler! Allah'ın gazabına uğramış bir kavmi dost edinmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/mumtehine-suresi-60/ayet-13/diyanet-isleri-baskanligi-meali-1"}, {"id": 136, "emir": "Mallarınızı aklı ermezlere vermeyin; onları besleyin, giydirin, güzel söz söyleyin.", "ref": "Nisa, 5", "sure": "Nisa", "meal": "Allah'ın sizin için geçim kaynağı kıldığı mallarınızı aklı kıt olanlara vermeyin; onları besleyin, giydirin ve onlara güzel söz söyleyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-5/diyanet-isleri-baskanligi-meali-1"}, {"id": 137, "emir": "Yetimleri kollayıp gözetin!", "ref": "Nisa, 6", "sure": "Nisa", "meal": "Yetimleri nikâh çağına erişinceye kadar gözetin; olgunlaştıklarını görürseniz mallarını kendilerine teslim edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 138, "emir": "Size haram kılınan kadınlarla evlenmeyin!", "ref": "Nisa, 22", "sure": "Nisa", "meal": "Anneleriniz, kızlarınız, kız kardeşleriniz, halalarınız, teyzeleriniz size haram kılındı.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-22/diyanet-isleri-baskanligi-meali-1"}, {"id": 139, "emir": "İntihar etmeyin!", "ref": "Nisa, 29", "sure": "Nisa", "meal": "Kendinizi öldürmeyin. Şüphesiz Allah sizi çok esirger.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-29/diyanet-isleri-baskanligi-meali-1"}, {"id": 140, "emir": "Birbirinizin nimet ve imkânlarına göz dikmeyin!", "ref": "Nisa, 32", "sure": "Nisa", "meal": "Allah'ın sizi birbirinizden üstün kıldığı şeyleri kıskanarak istemeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-32/diyanet-isleri-baskanligi-meali-1"}, {"id": 141, "emir": "Araları açılan eşlerin barışmaları için iki hakem tayin edin!", "ref": "Nisa, 35", "sure": "Nisa", "meal": "Eğer karı koca arasının açılmasından korkarsanız, erkeğin ailesinden bir hakem ve kadının ailesinden bir hakem gönderin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-35/diyanet-isleri-baskanligi-meali-1"}, {"id": 142, "emir": "Su bulamadığınız yerde teyemmüm ile ibadet edin!", "ref": "Nisa, 43", "sure": "Nisa", "meal": "Su bulamamanız hâlinde temiz bir toprağa teyemmüm edin; yüzlerinizi ve ellerinizi onunla meshedin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-43/diyanet-isleri-baskanligi-meali-1"}, {"id": 143, "emir": "Sarhoşken namaza yaklaşmayın!", "ref": "Nisa, 43", "sure": "Nisa", "meal": "Sarhoş iken ne söylediğinizi bilinceye kadar namaza yaklaşmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-43/diyanet-isleri-baskanligi-meali-1"}, {"id": 144, "emir": "Cünüpken namaza yaklaşmayın!", "ref": "Nisa, 43", "sure": "Nisa", "meal": "Cünüp iken de yolcu olmanız hâli dışında yıkanıncaya kadar namaza yaklaşmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-43/diyanet-isleri-baskanligi-meali-1"}, {"id": 145, "emir": "Emanetleri ehil olanlara verin!", "ref": "Nisa, 58", "sure": "Nisa", "meal": "Şüphesiz Allah size emanetleri ehline vermenizi ve insanlar arasında hükmettiğinizde adaletli davranmanızı emreder.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-58/diyanet-isleri-baskanligi-meali-1"}, {"id": 146, "emir": "Müslüman idarecilere itaat edin!", "ref": "Nisa, 59", "sure": "Nisa", "meal": "Ey iman edenler! Allah'a itaat edin, Peygamber'e itaat edin ve sizden olan yetkililere de itaat edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-59/diyanet-isleri-baskanligi-meali-1"}, {"id": 147, "emir": "Zulme uğrayan insanlar için savaşın!", "ref": "Nisa, 75", "sure": "Nisa", "meal": "Size ne oluyor ki Allah yolunda zavallı erkekler, kadınlar ve çocuklar uğrunda savaşmıyorsunuz?", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-75/diyanet-isleri-baskanligi-meali-1"}, {"id": 148, "emir": "Şeytan dostları ile savaşın!", "ref": "Nisa, 76", "sure": "Nisa", "meal": "İman edenler Allah yolunda savaşırlar. O hâlde şeytanın dostlarıyla savaşın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-76/diyanet-isleri-baskanligi-meali-1"}, {"id": 149, "emir": "Selama kesinlikle karşılık verin!", "ref": "Nisa, 86", "sure": "Nisa", "meal": "Size bir selam verildiğinde ondan daha güzeliyle karşılık verin ya da aynısıyla karşılayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-86/diyanet-isleri-baskanligi-meali-1"}, {"id": 150, "emir": "Size selam verenlere 'Sen mümin değilsin!' demeyin!", "ref": "Nisa, 94", "sure": "Nisa", "meal": "Size barış teklif edene 'Sen mümin değilsin' demeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-94/diyanet-isleri-baskanligi-meali-1"}, {"id": 151, "emir": "Hainlerin savunucusu olmayın!", "ref": "Nisa, 105", "sure": "Nisa", "meal": "Hainlerin savunucusu olma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-105/diyanet-isleri-baskanligi-meali-1"}, {"id": 152, "emir": "Allah'a iman edin!", "ref": "Nisa, 136", "sure": "Nisa", "meal": "Ey iman edenler! Allah'a, Peygamberine ve indirdiği kitaplara iman edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-136/diyanet-isleri-baskanligi-meali-1"}, {"id": 153, "emir": "Peygamberlere iman edin!", "ref": "Nisa, 136", "sure": "Nisa", "meal": "Ey iman edenler! Allah'a, Peygamberine ve indirdiği kitaplara iman edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-136/diyanet-isleri-baskanligi-meali-1"}, {"id": 154, "emir": "İndirilen kitaplara iman edin!", "ref": "Nisa, 136", "sure": "Nisa", "meal": "Ey iman edenler! Allah'a, Peygamberine ve indirdiği kitaplara iman edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-136/diyanet-isleri-baskanligi-meali-1"}, {"id": 155, "emir": "Meleklere iman edin!", "ref": "Nisa, 136", "sure": "Nisa", "meal": "Ey iman edenler! Allah'a, Peygamberine, kitaplara, meleklere, peygamberlere ve âhiret gününe iman edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-136/diyanet-isleri-baskanligi-meali-1"}, {"id": 156, "emir": "Ahiret gününe iman edin!", "ref": "Nisa, 136", "sure": "Nisa", "meal": "Ey iman edenler! Allah'a, Peygamberine, kitaplara, meleklere, peygamberlere ve âhiret gününe iman edin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-136/diyanet-isleri-baskanligi-meali-1"}, {"id": 157, "emir": "Allah'ın ayetleriyle inkâr ve alay edildiğinde orada oturmayın!", "ref": "Nisa, 140", "sure": "Nisa", "meal": "Allah'ın ayetlerinin inkâr edildiğini ve onlarla alay edildiğini işittiğinizde, onlar başka bir söze geçinceye kadar o toplulukla oturmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nisa-suresi-4/ayet-140/diyanet-isleri-baskanligi-meali-1"}, {"id": 158, "emir": "Kendinizi sürekli hesaba çekin!", "ref": "Haşr, 18", "sure": "Haşr", "meal": "Ey iman edenler! Allah'a karşı gelmekten sakının ve herkes yarın için ne hazırladığına baksın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hasr-suresi-59/ayet-18/diyanet-isleri-baskanligi-meali-1"}, {"id": 159, "emir": "Zina eden kadın ve erkeği cezalandırın!", "ref": "Nur, 2", "sure": "Nur", "meal": "Zina eden kadın ile zina eden erkeğin her birine yüz sopa vurun; Allah'a ve âhiret gününe inanıyorsanız Allah'ın dinini uygulamak konusunda onlara acıma duygusu sizi etkilemesin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 160, "emir": "Zina edenler ancak zina edenlerle ya da müşriklerle nikâhlansın!", "ref": "Nur, 3", "sure": "Nur", "meal": "Zina eden erkek, zina eden veya müşrik olan bir kadından başkasıyla evlenmez; zina eden kadınla da ancak zina eden veya müşrik olan bir erkek evlenir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-3/diyanet-isleri-baskanligi-meali-1"}, {"id": 161, "emir": "İffetli kadınlara iftira edenleri cezalandırın!", "ref": "Nur, 4", "sure": "Nur", "meal": "İffetli kadınlara zina isnat eden, sonra dört şahit getirmeyenlere seksen sopa vurun ve artık onların şahitliğini asla kabul etmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-4/diyanet-isleri-baskanligi-meali-1"}, {"id": 162, "emir": "İffetli kadınlara iftira atanların şahitliğini bir daha asla kabul etmeyin!", "ref": "Nur, 4", "sure": "Nur", "meal": "İffetli kadınlara zina isnat eden, sonra dört şahit getirmeyenlere seksen sopa vurun ve artık onların şahitliğini asla kabul etmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-4/diyanet-isleri-baskanligi-meali-1"}, {"id": 163, "emir": "Başkalarının evlerine izinsiz ve selamsız girmeyin!", "ref": "Nur, 27", "sure": "Nur", "meal": "Ey iman edenler! Kendi evlerinizden başka evlere, seslenip izin alıp ev halkına selam vermeden girmeyin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-27/diyanet-isleri-baskanligi-meali-1"}, {"id": 164, "emir": "Bakışlarınızı denetim altında tutun!", "ref": "Nur, 30", "sure": "Nur", "meal": "Mümin erkeklere söyle: Gözlerini haramdan kaçınsınlar ve ırzlarını korusunlar.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-30/diyanet-isleri-baskanligi-meali-1"}, {"id": 165, "emir": "Irzınızı koruyun!", "ref": "Nur, 30", "sure": "Nur", "meal": "Mümin erkeklere söyle: Gözlerini haramdan kaçınsınlar ve ırzlarını korusunlar.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-30/diyanet-isleri-baskanligi-meali-1"}, {"id": 166, "emir": "Mümin kadınlar başörtülerinizi takın!", "ref": "Nur, 31", "sure": "Nur", "meal": "Mümin kadınlara da söyle: Gözlerini haramdan kaçınsınlar, ırzlarını korusunlar; başörtülerini yakalarının üzerine örtsünler.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-31/diyanet-isleri-baskanligi-meali-1"}, {"id": 167, "emir": "Mümin kadınlar ziynetlerini yakınlarından başkasına göstermesinler!", "ref": "Nur, 31", "sure": "Nur", "meal": "Ziynetlerini kocaları, babaları, oğulları ve diğer mahremleri dışında kimseye göstermesinler.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-31/diyanet-isleri-baskanligi-meali-1"}, {"id": 168, "emir": "Hepiniz Allah'a tövbe edin!", "ref": "Nur, 31", "sure": "Nur", "meal": "Hepiniz Allah'a tövbe edin ey müminler! Umulur ki kurtuluşa erersiniz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-31/diyanet-isleri-baskanligi-meali-1"}, {"id": 169, "emir": "Evlenme durumuna gelenleri evlendirin!", "ref": "Nur, 32", "sure": "Nur", "meal": "İçinizden bekâr olanları ve kölelerinizden, cariyelerinizden durumu uygun olanları evlendirin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-32/diyanet-isleri-baskanligi-meali-1"}, {"id": 170, "emir": "Hz. Peygambere hitabınız birbirinize hitabınız gibi olmasın!", "ref": "Nur, 63", "sure": "Nur", "meal": "Peygamberin çağrısını kendi aranızda birbirinizi çağırmanız gibi saymayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/nur-suresi-24/ayet-63/diyanet-isleri-baskanligi-meali-1"}, {"id": 171, "emir": "Yalan sözden uzak durun!", "ref": "Hac, 30", "sure": "Hac", "meal": "Yalan sözden kaçınıp sakının.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hac-suresi-22/ayet-30/diyanet-isleri-baskanligi-meali-1"}, {"id": 172, "emir": "Allah uğrunda, O'na yaraşır biçimde cihâd edin!", "ref": "Hac, 78", "sure": "Hac", "meal": "Allah yolunda hakkıyla cihad edin. O, sizi seçti ve dinde size hiçbir güçlük yüklemedi.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hac-suresi-22/ayet-78/diyanet-isleri-baskanligi-meali-1"}, {"id": 173, "emir": "Mallarınızın Allah'ı anmanıza engel olmasına izin vermeyin!", "ref": "Münafikun, 9", "sure": "Münafikun", "meal": "Ey iman edenler! Mallarınız ve evlatlarınız sizi Allah'ı anmaktan alıkoymasın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/munafikun-suresi-63/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 174, "emir": "Çocuklarınızın Allah'ı anmanıza engel olmasına izin vermeyin!", "ref": "Münafikun, 9", "sure": "Münafikun", "meal": "Ey iman edenler! Mallarınız ve evlatlarınız sizi Allah'ı anmaktan alıkoymasın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/munafikun-suresi-63/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 175, "emir": "Mescitlerde, meclislerde yeni gelenlere yer açın!", "ref": "Mücadile, 11", "sure": "Mücadile", "meal": "Ey iman edenler! Size meclislerde yer açın denildiğinde yer açın ki Allah da size genişlik versin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/mucadile-suresi-58/ayet-11/diyanet-isleri-baskanligi-meali-1"}, {"id": 176, "emir": "Allah'ın emirlerini tanımayanların getirdiği haberleri iyice araştırın!", "ref": "Hucurat, 6", "sure": "Hucurat", "meal": "Eğer bir fasık size bir haber getirirse, o haberin doğruluğunu araştırın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 177, "emir": "Müminler arası çekişmelere müdahale ederek barışı sağlayın!", "ref": "Hucurat, 9", "sure": "Hucurat", "meal": "Müminlerden iki topluluk birbiriyle savaşırsa aralarını düzeltin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 178, "emir": "Müminler arası çekişmelerde şiddeti başlatan tarafla savaşın!", "ref": "Hucurat, 9", "sure": "Hucurat", "meal": "Eğer biri diğerine karşı hâlâ saldırırsa, saldıran tarafla Allah'ın emrine dönünceye kadar savaşın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 179, "emir": "Birbirinizle alay etmeyin!", "ref": "Hucurat, 11", "sure": "Hucurat", "meal": "Ey iman edenler! Bir topluluk bir topluluğu alaya almasın; belki onlar, kendilerinden daha iyidir.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-11/diyanet-isleri-baskanligi-meali-1"}, {"id": 180, "emir": "Birbirinize kötü lakaplar takmayın!", "ref": "Hucurat, 11", "sure": "Hucurat", "meal": "Birbirinizi kötü lakaplarla çağırmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-11/diyanet-isleri-baskanligi-meali-1"}, {"id": 181, "emir": "Birbirinizde ayıp aramayın!", "ref": "Hucurat, 11", "sure": "Hucurat", "meal": "Kendinizi birbirinizi kusurlu göstererek ayıplamayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-11/diyanet-isleri-baskanligi-meali-1"}, {"id": 182, "emir": "Zandan, önyargılardan kaçının!", "ref": "Hucurat, 12", "sure": "Hucurat", "meal": "Ey iman edenler! Zannın çoğundan kaçının. Çünkü zannın bir kısmı günahtır.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-12/diyanet-isleri-baskanligi-meali-1"}, {"id": 183, "emir": "Sizi alakadar etmeyen şeyleri araştırmayın!", "ref": "Hucurat, 12", "sure": "Hucurat", "meal": "Birbirinizin gizli hallerini araştırmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-12/diyanet-isleri-baskanligi-meali-1"}, {"id": 184, "emir": "Birbirinizin gıybetini yapmayın!", "ref": "Hucurat, 12", "sure": "Hucurat", "meal": "Birbirinizin gıybetini yapmayın. Herhangi biriniz ölü kardeşinin etini yemekten hoşlanır mı?", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/hucurat-suresi-49/ayet-12/diyanet-isleri-baskanligi-meali-1"}, {"id": 185, "emir": "Kendinize ve ailenize sahip çıkın!", "ref": "Tahrim, 6", "sure": "Tahrim", "meal": "Ey iman edenler! Kendinizi ve ailenizi, yakıtı insanlar ve taşlar olan ateşten koruyun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/tahrim-suresi-66/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 186, "emir": "Eşlerinizden ve çocuklarınızdan size düşman olabileceklere karşı tedbirli olun!", "ref": "Teğabun, 14", "sure": "Teğabun", "meal": "Ey iman edenler! Eşlerinizden ve evlatlarınızdan size düşman olanlar vardır; onlardan sakının.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/tegabun-suresi-64/ayet-14/diyanet-isleri-baskanligi-meali-1"}, {"id": 187, "emir": "Yapmayacağınız, yapamayacağınız şeyleri söylemeyin!", "ref": "Saff, 2", "sure": "Saff", "meal": "Ey iman edenler! Yapmayacağınız şeyleri neden söylüyorsunuz?", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/saf-suresi-61/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 188, "emir": "Allah'ın yardımcıları olun!", "ref": "Saff, 14", "sure": "Saff", "meal": "Ey iman edenler! Allah'ın yardımcıları olun.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/saf-suresi-61/ayet-14/diyanet-isleri-baskanligi-meali-1"}, {"id": 189, "emir": "Cuma namazı kılın!", "ref": "Cuma, 9", "sure": "Cuma", "meal": "Ey iman edenler! Cuma günü namaz için çağrı yapıldığında Allah'ın zikrine koşun ve alışverişi bırakın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/cuma-suresi-62/ayet-9/diyanet-isleri-baskanligi-meali-1"}, {"id": 190, "emir": "İyilik ve takva üzere yardımlaşın!", "ref": "Maide, 2", "sure": "Maide", "meal": "İyilik ve takva üzere yardımlaşın; günah ve düşmanlık üzere yardımlaşmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 191, "emir": "Düşmanlık üzere yardımlaşmayın!", "ref": "Maide, 2", "sure": "Maide", "meal": "İyilik ve takva üzere yardımlaşın; günah ve düşmanlık üzere yardımlaşmayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-2/diyanet-isleri-baskanligi-meali-1"}, {"id": 192, "emir": "Haram etleri ve kanı yemeyin!", "ref": "Maide, 3", "sure": "Maide", "meal": "Size şunlar haram kılındı: leş, kan, domuz eti, Allah'tan başkası adına kesilmiş hayvan.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-3/diyanet-isleri-baskanligi-meali-1"}, {"id": 193, "emir": "Av hayvanları üzerine Allah'ın adını anın!", "ref": "Maide, 4", "sure": "Maide", "meal": "Avcı hayvanların sizin için yakaladıklarından yiyin ve üzerine Allah'ın adını anın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-4/diyanet-isleri-baskanligi-meali-1"}, {"id": 194, "emir": "Namazdan önce abdest alın!", "ref": "Maide, 6", "sure": "Maide", "meal": "Ey iman edenler! Namaza kalktığınızda yüzlerinizi ve ellerinizi dirseklere kadar yıkayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 195, "emir": "Cünüp olduğunuz zaman boy abdesti alın!", "ref": "Maide, 6", "sure": "Maide", "meal": "Eğer cünüp iseniz iyice yıkanarak temizlenin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 196, "emir": "Allah'a giden yol arayın!", "ref": "Maide, 35", "sure": "Maide", "meal": "Ey iman edenler! Allah'a karşı gelmekten sakının, O'na yaklaşmaya vesile arayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-35/diyanet-isleri-baskanligi-meali-1"}, {"id": 197, "emir": "Hırsızın elini kesin!", "ref": "Maide, 38", "sure": "Maide", "meal": "Hırsızlık yapan erkek ile hırsızlık yapan kadının ellerini kesin.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-38/diyanet-isleri-baskanligi-meali-1"}, {"id": 198, "emir": "Allah'ın helal bıraktığı şeyleri haram ilan etmeyin!", "ref": "Maide, 87", "sure": "Maide", "meal": "Ey iman edenler! Allah'ın size helal kıldığı temiz şeyleri haram saymayın.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-87/diyanet-isleri-baskanligi-meali-1"}, {"id": 199, "emir": "İçkiden, uyuşturucudan, kumardan, putlardan, şans oyunlarından uzak durun!", "ref": "Maide, 90", "sure": "Maide", "meal": "Ey iman edenler! Şarap, kumar, dikili taşlar ve fal okları şeytan işi pisliklerdir; bunlardan uzak durun ki kurtuluşa eresiniz.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/maide-suresi-5/ayet-90/diyanet-isleri-baskanligi-meali-1"}, {"id": 200, "emir": "Savaş sırasında bir müşrik size sığınırsa buna izin verin!", "ref": "Tevbe, 6", "sure": "Tevbe", "meal": "Eğer müşriklerden biri senden aman isterse, Allah'ın kelâmını dinleyinceye kadar ona aman ver.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/tevbe-suresi-9/ayet-6/diyanet-isleri-baskanligi-meali-1"}, {"id": 201, "emir": "Allah rızası için inşa edilmeyen mescitlerde bulunmayın!", "ref": "Tevbe, 107", "sure": "Tevbe", "meal": "Allah'a zarar vermek ve Allah ile elçisine karşı savaşanlar için karakol edinmek amacıyla kurulan mescitte artık asla namaz kılma.", "url": "https://kuran.diyanet.gov.tr/mushaf/kuran-meal-1/tevbe-suresi-9/ayet-107/diyanet-isleri-baskanligi-meali-1"}];
 
-let currentIdx = 0;
-let mode = 'single';
+// ── State ─────────────────────────────────────────────────────────────
+let currentIdx  = 0;   // index into PLAYLIST
+let mode        = 'single';
+let efefulOn    = false;
 
-function init() {
-  buildAllGrid();
-  const hash = window.location.hash;
-  if (hash) {
-    const m = hash.match(/^#(\d+)$/);
-    if (m) {
-      const n = parseInt(m[1]);
-      if (n >= 1 && n <= ENTRIES.length) {
-        currentIdx = n - 1;
-      }
-    }
-    if (hash === '#all') { setMode('all', false); return; }
+// PLAYLIST is either the ordered indices or a shuffled version
+let PLAYLIST    = ENTRIES.map((_,i) => i);  // default: 0..200
+let efefulPos   = 0;   // current position in tefeül playlist
+
+// ── Fisher-Yates shuffle ──────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  renderSingle();
+  return a;
 }
 
-function renderSingle() {
+// ── Tefeül ─────────────────────────────────────────────────────────────
+function toggleEfeful() {
+  efefulOn = !efefulOn;
+  const btn    = document.getElementById('btn-efeful');
+  const badge  = document.getElementById('efeful-badge');
+
+  if (efefulOn) {
+    PLAYLIST  = shuffle(ENTRIES.map((_,i) => i));
+    efefulPos = 0;
+    currentIdx = PLAYLIST[0];
+    btn.classList.add('active');
+    badge.classList.add('visible');
+    document.body.classList.add('efeful-mode');
+    showToast('🔀 Tefeül modu açıldı — ' + ENTRIES.length + ' madde karıştırıldı');
+    // trigger icon animation
+    btn.querySelector('.shuffle-icon').style.animation = 'none';
+    btn.querySelector('.shuffle-icon').offsetHeight;
+    btn.querySelector('.shuffle-icon').style.animation = '';
+  } else {
+    // Restore normal playlist, keep same entry
+    PLAYLIST  = ENTRIES.map((_,i) => i);
+    efefulPos = currentIdx; // stay at current entry's position
+    btn.classList.remove('active');
+    badge.classList.remove('visible');
+    document.body.classList.remove('efeful-mode');
+    showToast('Sıralı moda dönüldü');
+  }
+
+  if (mode === 'single') renderSingle(true);
+}
+
+function skipEfeful() {
+  // Jump to a completely random entry (not next in playlist)
+  const randomPos = Math.floor(Math.random() * ENTRIES.length);
+  efefulPos  = randomPos;
+  currentIdx = PLAYLIST[efefulPos];
+  renderSingle(true);
+  showToast('🎲 Rastgele atlandı');
+}
+
+// ── Render ─────────────────────────────────────────────────────────────
+function renderSingle(animate) {
   const e = ENTRIES[currentIdx];
-  document.getElementById('s-num').textContent = e.id;
+
+  document.getElementById('s-num').textContent  = e.id;
   document.getElementById('s-sure').textContent = e.ref;
   document.getElementById('s-emir').textContent = e.emir;
   document.getElementById('s-meal').textContent = e.meal;
-  document.getElementById('s-link').href = e.url;
-  document.getElementById('counter').innerHTML = `<strong>${e.id}</strong> / ${ENTRIES.length}`;
+  document.getElementById('s-link').href        = e.url;
 
-  const pageUrl = window.location.origin + window.location.pathname + '#' + e.id;
+  // Counter
+  const pos   = efefulOn ? efefulPos + 1 : currentIdx + 1;
+  const total = ENTRIES.length;
+  const label = efefulOn ? `<strong>${pos}</strong> / ${total} <span style="font-size:.8em;opacity:.7">(tefeül)</span>` : `<strong>${e.id}</strong> / ${total}`;
+  document.getElementById('counter').innerHTML = label;
+
+  // Progress
+  document.getElementById('progress-bar').style.width = ((pos / total) * 100) + '%';
+
+  // Nav buttons
+  document.getElementById('btn-prev').disabled = pos <= 1;
+  document.getElementById('btn-next').disabled = pos >= total;
+
+  // X share
+  const pageUrl   = window.location.origin + window.location.pathname + '#' + e.id;
   const tweetText = `📖 "${e.emir}" (${e.ref})\n\n"${e.meal.substring(0,120)}${e.meal.length>120?'…':''}"\n\n— Nüzul Sırasına Göre Kur'an Emirleri`;
-  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(pageUrl)}`;
-  document.getElementById('s-share').href = shareUrl;
+  document.getElementById('s-share').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(pageUrl)}`;
 
-  // progress
-  const pct = ((currentIdx + 1) / ENTRIES.length) * 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
+  // Hash
+  history.replaceState(null, '', '#' + e.id);
 
-  // nav buttons
-  document.getElementById('btn-prev').disabled = currentIdx === 0;
-  document.getElementById('btn-next').disabled = currentIdx === ENTRIES.length - 1;
-
-  // hash
-  window.location.hash = '#' + e.id;
-
-  // card animation
-  const card = document.getElementById('main-card');
-  card.style.animation = 'none';
-  card.offsetHeight;
-  card.style.animation = '';
+  // Card animation
+  if (animate) {
+    const card = document.getElementById('main-card');
+    card.classList.remove('anim');
+    card.offsetHeight;
+    card.classList.add('anim');
+  }
 }
 
 function navigate(dir) {
-  const next = currentIdx + dir;
-  if (next < 0 || next >= ENTRIES.length) return;
-  currentIdx = next;
-  renderSingle();
+  if (efefulOn) {
+    const next = efefulPos + dir;
+    if (next < 0 || next >= PLAYLIST.length) return;
+    efefulPos  = next;
+    currentIdx = PLAYLIST[efefulPos];
+  } else {
+    const next = currentIdx + dir;
+    if (next < 0 || next >= ENTRIES.length) return;
+    currentIdx = next;
+    efefulPos  = next;
+  }
+  renderSingle(true);
 }
 
 function goTo(idx) {
   currentIdx = idx;
+  efefulPos  = efefulOn ? PLAYLIST.indexOf(idx) : idx;
+  if (efefulOn && efefulPos === -1) efefulPos = 0;
   setMode('single');
-  renderSingle();
 }
 
-function setMode(m, updateHash = true) {
+// ── Mode ──────────────────────────────────────────────────────────────
+function setMode(m, updateHash) {
   mode = m;
-  const single = document.getElementById('single-view');
-  const all = document.getElementById('all-view');
-  const btnS = document.getElementById('btn-single');
-  const btnA = document.getElementById('btn-all');
-  const counter = document.getElementById('counter');
-
   if (m === 'single') {
-    single.classList.remove('hidden');
-    all.classList.add('hidden');
-    btnS.classList.add('active');
-    btnA.classList.remove('active');
-    counter.classList.remove('hidden');
-    renderSingle();
+    document.getElementById('single-view').classList.remove('hidden');
+    document.getElementById('all-view').classList.add('hidden');
+    document.getElementById('btn-single').classList.add('active');
+    document.getElementById('btn-all').classList.remove('active');
+    document.getElementById('counter').classList.remove('hidden');
+    renderSingle(false);
   } else {
-    single.classList.add('hidden');
-    all.classList.remove('hidden');
-    btnS.classList.remove('active');
-    btnA.classList.add('active');
-    counter.classList.add('hidden');
-    if (updateHash) window.location.hash = '#all';
+    document.getElementById('single-view').classList.add('hidden');
+    document.getElementById('all-view').classList.remove('hidden');
+    document.getElementById('btn-single').classList.remove('active');
+    document.getElementById('btn-all').classList.add('active');
+    document.getElementById('counter').classList.add('hidden');
+    if (updateHash !== false) history.replaceState(null,'','#all');
     document.getElementById('search-input').focus();
   }
 }
 
-/* ── All View ── */
+// ── All View ──────────────────────────────────────────────────────────
 function buildAllGrid() {
   const grid = document.getElementById('all-grid');
   grid.innerHTML = '';
@@ -684,44 +577,72 @@ function filterAll() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
   document.querySelectorAll('.all-card').forEach(card => {
     const id = card.id.replace('ac-','');
-    const e = ENTRIES.find(x => x.id == id);
+    const e  = ENTRIES.find(x => x.id == id);
     if (!e) return;
-    const match = !q ||
-      e.emir.toLowerCase().includes(q) ||
-      e.meal.toLowerCase().includes(q) ||
-      e.ref.toLowerCase().includes(q) ||
-      e.sure.toLowerCase().includes(q);
+    const match = !q || e.emir.toLowerCase().includes(q) || e.meal.toLowerCase().includes(q) || e.ref.toLowerCase().includes(q) || e.sure.toLowerCase().includes(q);
     card.classList.toggle('hidden', !match);
   });
 }
 
+// ── Toast ─────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('efeful-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ── Keyboard ── */
+// ── Keyboard ──────────────────────────────────────────────────────────
 document.addEventListener('keydown', function(ev) {
   if (ev.target.tagName === 'INPUT') return;
   if (mode === 'single') {
-    if (ev.key === 'ArrowLeft')  { ev.preventDefault(); navigate(-1); }
-    if (ev.key === 'ArrowRight') { ev.preventDefault(); navigate(1); }
-    if (ev.key.toLowerCase() === 'a') { ev.preventDefault(); setMode('all'); }
+    if (ev.key === 'ArrowLeft')              { ev.preventDefault(); navigate(-1); }
+    if (ev.key === 'ArrowRight')             { ev.preventDefault(); navigate(1); }
+    if (ev.key.toLowerCase() === 'a')        { ev.preventDefault(); setMode('all'); }
+    if (ev.key.toLowerCase() === 'e')        { ev.preventDefault(); toggleEfeful(); }
+    if (ev.key.toLowerCase() === 'r')        { ev.preventDefault(); jumpRandom(); }
   } else {
-    if (ev.key.toLowerCase() === 's' || ev.key === 'Escape') { ev.preventDefault(); setMode('single'); }
+    if (ev.key === 'Escape' || ev.key.toLowerCase() === 's') { ev.preventDefault(); setMode('single'); }
+    if (ev.key.toLowerCase() === 'e') { ev.preventDefault(); toggleEfeful(); setMode('single'); }
   }
 });
 
-/* ── Hash change (browser back/forward) ── */
+// R key — single random jump (no tefeül mode)
+function jumpRandom() {
+  currentIdx = Math.floor(Math.random() * ENTRIES.length);
+  if (efefulOn) { efefulPos = PLAYLIST.indexOf(currentIdx); if (efefulPos===-1) efefulPos=0; }
+  else          { efefulPos = currentIdx; }
+  renderSingle(true);
+  showToast('🎲 Rastgele madde');
+}
+
+// ── Hash / init ───────────────────────────────────────────────────────
+function init() {
+  buildAllGrid();
+  const hash = window.location.hash;
+  if (hash === '#all')        { setMode('all', false); return; }
+  const m = hash.match(/^#(\d+)$/);
+  if (m) {
+    const n = parseInt(m[1]);
+    if (n >= 1 && n <= ENTRIES.length) { currentIdx = n - 1; efefulPos = n - 1; }
+  }
+  renderSingle(false);
+}
+
 window.addEventListener('hashchange', function() {
   const hash = window.location.hash;
   if (hash === '#all') { setMode('all', false); return; }
   const m = hash.match(/^#(\d+)$/);
   if (m && mode === 'single') {
     const n = parseInt(m[1]);
-    if (n >= 1 && n <= ENTRIES.length) {
-      currentIdx = n - 1;
-      renderSingle();
-    }
+    if (n >= 1 && n <= ENTRIES.length) { currentIdx = n - 1; efefulPos = n - 1; renderSingle(false); }
   }
 });
 
