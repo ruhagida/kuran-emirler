@@ -322,10 +322,6 @@ kbd { background: var(--surface); border: 1px solid var(--border); border-radius
       Tefeül
     </button>
 
-    <div class="efeful-badge" id="efeful-badge">
-      <span class="dot"></span>
-      Tefeül modu
-    </div>
 
     <div class="counter" id="counter"><strong>1</strong> / 201</div>
   </div>
@@ -427,7 +423,7 @@ function toggleEfeful() {
     btn.classList.add('active');
     badge.classList.add('visible');
     document.body.classList.add('efeful-mode');
-    showToast('🔀 Tefeül modu açıldı — ' + ENTRIES.length + ' madde karıştırıldı');
+
     // trigger icon animation
     btn.querySelector('.shuffle-icon').style.animation = 'none';
     btn.querySelector('.shuffle-icon').offsetHeight;
